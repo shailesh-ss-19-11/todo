@@ -1,0 +1,18 @@
+.input-todo {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+}
+
+.todo-list {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    li{
+        list-style: none;
+        border: 0.5px solid black;
+        padding-left: 10px;
+    }
+}
