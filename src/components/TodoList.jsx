@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './todolist.scss';
 import Swal from 'sweetalert2'
 import { MdOutlineDelete } from "react-icons/md";
@@ -6,11 +6,13 @@ const TodoList = () => {
     const [inputValue, setinputValue] = useState("");
     const [todoList, settodoList] = useState([]);
     const [show, setshow] = useState(false);
+    const [object, setobject] = useState({});
+    const myref = useRef(null);
     const handleinputChange = (e) => {
         setinputValue(e.target.value)
     }
 
-    const addTodo = () => {
+    const addTodo = (e) => {
         if (inputValue == "") {
             Swal.fire({
                 title: 'Error!',
@@ -26,6 +28,8 @@ const TodoList = () => {
             const newtodo = [...todoList, obj]
             settodoList(newtodo)
             localStorage.setItem("todolist", JSON.stringify(newtodo))
+            console.dir(myref.current)
+            myref.current.scrollIntoView({ behavior: "smooth" });
         }
     }
 
@@ -41,18 +45,55 @@ const TodoList = () => {
     useEffect(() => {
         const todolist = JSON.parse(localStorage.getItem("todolist"));
         settodoList(todolist)
+
     }, [])
+
+    const handleDelete = (id) => {
+        let todolist = [...todoList];
+        const newaarr = todolist.filter((task) => task.id != id);
+        console.log(newaarr, "newaarr")
+        settodoList(newaarr)
+        localStorage.setItem("todolist", JSON.stringify(newaarr))
+    }
+
+    const search = (e) => {
+        console.log(e.target.value)
+        if (e.target.value == "") {
+            const todoitems = JSON.parse(localStorage.getItem("todolist"))
+            settodoList(todoitems)
+        } else {
+            let todolist = [...todoList];
+            const newaarr = todolist.filter((task) => task.taskname.includes(e.target.value));
+            settodoList(newaarr)
+        }
+
+    }
+    const addTodoUsingEnter = (e) => {
+        if (e.code === "Enter") {
+            let obj = {};
+            obj.id = todoList.length + 1;
+            obj.taskname = inputValue;
+            setinputValue("")
+            const newtodo = [...todoList, obj]
+            settodoList(newtodo)
+            localStorage.setItem("todolist", JSON.stringify(newtodo))
+            console.dir(myref.current)
+            myref.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }
     return (
         <div className='container mt-5'>
-            {show ? <div className='input-todo m-auto'>
-                <input type="text" onChange={handleinputChange} value={inputValue} />
+            <div className='input-todo m-auto'>
+                <input type="text" onChange={handleinputChange} value={inputValue} placeholder='add todo' onKeyDown={addTodoUsingEnter} />
                 <button className='btn btn-sm btn-primary' onClick={addTodo}>ADD</button>
-            </div> : null}
+                <input type="text" onChange={search} placeholder='search' />
+            </div>
             {/* <button className='btn btn-primary' onClick={() => setshow(!show)}>{show ? "hide" : "show"}</button> */}
             {/* <div>
                 <input type="text" />
                 <button>sort</button>
             </div> */}
+            {object?.name}
             <ul className='todo-list'>
                 {todoList.length > 0 ?
                     todoList.map((todo, index) => {
@@ -65,11 +106,12 @@ const TodoList = () => {
                                         <p className='m-0 p-1'>{todo.taskname}</p>
                                     }
                                 </div>
-                                <button className='btn btn-sm btn-danger m-2'><MdOutlineDelete /></button>
+                                <button className='btn btn-sm btn-danger m-2' onClick={() => handleDelete(todo.id)}><MdOutlineDelete /></button>
                             </li>
                         )
                     }) : "there is no todo"}
             </ul>
+            <div ref={myref} className='mb-5'></div>
         </div>
     );
 }
