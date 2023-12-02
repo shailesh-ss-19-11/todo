@@ -43,9 +43,8 @@ const TodoList = () => {
     }
 
     useEffect(() => {
-        const todolist = JSON.parse(localStorage.getItem("todolist"));
+        const todolist = JSON.parse(localStorage.getItem("todolist")) === null ? [] : JSON.parse(localStorage.getItem("todolist"));
         settodoList(todolist)
-
     }, [])
 
     const handleDelete = (id) => {
@@ -71,7 +70,7 @@ const TodoList = () => {
     const addTodoUsingEnter = (e) => {
         if (e.code === "Enter") {
             let obj = {};
-            obj.id = todoList.length + 1;
+            obj.id = todoList?.length + 1;
             obj.taskname = inputValue;
             setinputValue("")
             const newtodo = [...todoList, obj]
