@@ -17,8 +17,8 @@ const SignIn = () => {
         axios.post("https://reqres.in/api/login", userinfo).
             then((resp) => {
                 if (resp.status == 200) {
-                    navigate("/todolist")
                     localStorage.setItem("userinfo", JSON.stringify(resp.data))
+                    navigate("/todolist")
                 }
             }).catch((err) => {
                 Swal.fire({
