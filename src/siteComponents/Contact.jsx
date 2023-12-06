@@ -1,9 +1,11 @@
 import React from 'react';
-
+import { useContext } from 'react';
+import { gloablContext } from '../App';
 const Contact = () => {
+    const context = useContext(gloablContext)
     return (
         <div>
-            Contact
+            {context.bgColor}
         </div>
     );
 }
