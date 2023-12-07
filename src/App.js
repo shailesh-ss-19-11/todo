@@ -16,17 +16,18 @@ export const gloablContext = createContext();
 
 function App() {
   const [bgColor, setbgColor] = useState("red");
+  const [headerclass, setheaderclass] = useState("bg-dark text-white");
 
   const changeColor = (color) => {
     setbgColor(color)
   }
 
   useEffect(() => {
-    alert("color is changed")
-  }, [bgColor]);
+    // alert("color is changed")
+  },[]);
   return (
     <>
-      <gloablContext.Provider value={{ bgColor, changeColor }}>
+      <gloablContext.Provider value={{ bgColor, changeColor,name:"shailesh",headerclass }}>
         <Header />
         <Routes >
           <Route path='/' Component={SignIn} />
